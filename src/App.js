@@ -1,28 +1,40 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import 'semantic-ui-css/semantic.min.css'
+import styled from 'styled-components'
+
+import Chat from 'components/Chat/Chat'
+import ControlPanel from 'components/ControlPanel'
+
+const FixedContainer = styled.div`
+  position: fixed;
+  width: 250px;
+  top: 50px;
+  right: 50px;
+`
+
+const messages = [
+  {
+    author: 'Piotr',
+    sentAt: Date.now(),
+    text: 'Hello World!',
+  },
+]
+
 
 class App extends Component {
+  componentDidMount() {
+    const element = document.getElementById('name')
+    element.scrollTop = element.offsetHeight
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <FixedContainer>
+        <ControlPanel />
+        <Chat messages={messages} />
+      </FixedContainer>
+    )
   }
 }
 
-export default App;
+export default App
