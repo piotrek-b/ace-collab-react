@@ -17,24 +17,26 @@ const StyledDiv = styled.div`
   overflow-y: scroll;
 `
 
-const Chat = ({ messages }) => (
-  <CollabChatContainer>
-    <Comment.Group>
-      <Header as="h3" dividing>
-        Chat
-      </Header>
-      <StyledDiv id="name">
-        {messages.map(({ author, sentAt, text }) => (
-          <ChatMessage author={author} sentAt={sentAt} text={text} />
-        ))}
-      </StyledDiv>
+const Chat = ({ messages, showChat }) => (
+  showChat ? (
+    <CollabChatContainer>
+      <Comment.Group>
+        <Header as="h3" dividing>
+          Chat
+        </Header>
+        <StyledDiv id="name">
+          {messages.map(({ author, sentAt, text }) => (
+            <ChatMessage author={author} sentAt={sentAt} text={text} />
+          ))}
+        </StyledDiv>
 
-      <Form reply>
-        <Form.TextArea />
-        <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-      </Form>
-    </Comment.Group>
-  </CollabChatContainer>
+        <Form reply>
+          <Form.TextArea />
+          <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+        </Form>
+      </Comment.Group>
+    </CollabChatContainer>
+  ) : null
 )
 
 Chat.propTypes = {

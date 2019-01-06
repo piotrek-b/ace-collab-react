@@ -22,16 +22,40 @@ const messages = [
 
 
 class App extends Component {
-  componentDidMount() {
-    const element = document.getElementById('name')
-    element.scrollTop = element.offsetHeight
+  constructor(props) {
+    super(props)
+    this.state = {
+      on: false,
+      showChat: false,
+    }
+  }
+
+  onPowerClick = () => {
+    this.setState((state) => ({ on: !state.on }))
+  }
+
+  onChatClick = () => {
+    this.setState((state) => ({ showChat: !state.showChat }))
+  }
+
+  onShareClick = () => {
+
   }
 
   render() {
+    const {
+      on,
+      showChat,
+    } = this.state
     return (
       <FixedContainer>
-        <ControlPanel />
-        <Chat messages={messages} />
+        <ControlPanel
+          on={on}
+          onPowerClick={this.onPowerClick}
+          onChatClick={this.onChatClick}
+          onShareClick={this.onShareClick}
+        />
+        <Chat messages={messages} showChat={on && showChat} />
       </FixedContainer>
     )
   }
