@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import styled from 'styled-components'
+import copy from 'copy-to-clipboard';
 
 import Chat from 'components/Chat/Chat'
 import ControlPanel from 'components/ControlPanel'
@@ -8,8 +9,8 @@ import ControlPanel from 'components/ControlPanel'
 const FixedContainer = styled.div`
   position: fixed;
   width: 250px;
-  top: 50px;
-  right: 50px;
+  top: 60px;
+  right: 60px;
 `
 
 const messages = [
@@ -39,7 +40,7 @@ class App extends Component {
   }
 
   onShareClick = () => {
-
+    copy('12345')
   }
 
   render() {
@@ -54,6 +55,7 @@ class App extends Component {
           onPowerClick={this.onPowerClick}
           onChatClick={this.onChatClick}
           onShareClick={this.onShareClick}
+          showChat={showChat}
         />
         <Chat messages={messages} showChat={on && showChat} />
       </FixedContainer>
