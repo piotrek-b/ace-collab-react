@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
+import { Provider } from 'react-redux'
 
+import store from 'store/store'
 import Chat from 'components/Chat/Chat'
 import ControlPanel from 'components/ControlPanel'
 
@@ -54,20 +56,22 @@ class App extends Component {
       username,
     } = this.state
     return (
-      <FixedContainer>
-        <ControlPanel
-          on={on}
-          onPowerClick={this.onPowerClick}
-          onChatClick={this.onChatClick}
-          onShareClick={this.onShareClick}
-          showChat={showChat}
-        />
-        <Chat
-          messages={messages}
-          showChat={on && showChat}
-          username={username}
-        />
-      </FixedContainer>
+      <Provider store={store}>
+        <FixedContainer>
+          <ControlPanel
+            on={on}
+            onPowerClick={this.onPowerClick}
+            onChatClick={this.onChatClick}
+            onShareClick={this.onShareClick}
+            showChat={showChat}
+          />
+          <Chat
+            messages={messages}
+            showChat={on && showChat}
+            username={username}
+          />
+        </FixedContainer>
+      </Provider>
     )
   }
 }
