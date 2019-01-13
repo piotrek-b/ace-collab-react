@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import styled from 'styled-components'
-import copy from 'copy-to-clipboard';
+import copy from 'copy-to-clipboard'
 
 import Chat from 'components/Chat/Chat'
 import ControlPanel from 'components/ControlPanel'
@@ -15,9 +15,12 @@ const FixedContainer = styled.div`
 
 const messages = [
   {
-    author: 'Piotr',
-    sentAt: Date.now(),
-    text: 'Hello World!',
+    type: 'CHAT_MESSAGE',
+    payload: '123',
+    metadata: {
+      author: 'Piotr',
+      date: new Date().toJSON(),
+    },
   },
 ]
 
@@ -26,8 +29,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      on: false,
+      on: true,
       showChat: false,
+      username: 'Piotr',
     }
   }
 
@@ -47,6 +51,7 @@ class App extends Component {
     const {
       on,
       showChat,
+      username,
     } = this.state
     return (
       <FixedContainer>
@@ -57,7 +62,11 @@ class App extends Component {
           onShareClick={this.onShareClick}
           showChat={showChat}
         />
-        <Chat messages={messages} showChat={on && showChat} />
+        <Chat
+          messages={messages}
+          showChat={on && showChat}
+          username={username}
+        />
       </FixedContainer>
     )
   }

@@ -1,10 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Comment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Moment from 'react-moment'
 
 import styledSemantic from 'utils/styledSemantic'
+import { ChatMessageShape } from 'types'
 
 const Data = styled.div`
     display: flex;
@@ -23,32 +23,35 @@ const Text = styledSemantic(Comment.Text)`
 `
 
 const ChatMessage = ({
-  author,
-  sentAt,
-  text,
-  fromMe,
-}) => (
-  <Comment>
-    <Comment.Content>
-      <Data fromMe={fromMe}>
-        <Comment.Author fromMe={fromMe}>{author}</Comment.Author>
-        <Metadata fromMe={fromMe}>
-          <Moment format="YYYY-MM-DD HH:mm:ss">
-            {sentAt}
-          </Moment>
-        </Metadata>
-      </Data>
-      <Text fromMe={fromMe}>{text}</Text>
-    </Comment.Content>
-  </Comment>
-)
+  payload,
+  metadata,
+  username,
+}) => {
+  const {
+    author,
+    time,
+  } = metadata
 
-ChatMessage.propTypes = {
-  author: PropTypes.string.isRequired,
-  sentAt: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  fromMe: PropTypes.bool,
+  const fromMe = author === username
+
+  return (
+    <Comment>
+      <Comment.Content>
+        <Data fromMe={fromMe}>
+          <Comment.Author fromMe={fromMe}>{author}</Comment.Author>
+          <Metadata fromMe={fromMe}>
+            <Moment format="YYYY-MM-DD HH:mm:ss">
+              {time}
+            </Moment>
+          </Metadata>
+        </Data>
+        <Text fromMe={false}>{payload}</Text>
+      </Comment.Content>
+    </Comment>
+  )
 }
+
+ChatMessage.propTypes = { ...ChatMessageShape }
 
 ChatMessage.defaultProps = {
   fromMe: false,

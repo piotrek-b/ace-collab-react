@@ -17,7 +17,7 @@ const StyledDiv = styled.div`
   overflow-y: scroll;
 `
 
-const Chat = ({ messages, showChat }) => (
+const Chat = ({ messages, showChat, username }) => (
   showChat ? (
     <CollabChatContainer>
       <Comment.Group>
@@ -25,14 +25,19 @@ const Chat = ({ messages, showChat }) => (
           Chat
         </Header>
         <StyledDiv id="name">
-          {messages.map(({ author, sentAt, text }) => (
-            <ChatMessage author={author} sentAt={sentAt} text={text} />
+          {messages.map((message) => (
+            <ChatMessage username={username} {...message} />
           ))}
         </StyledDiv>
 
         <Form reply>
           <Form.TextArea />
-          <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+          <Button
+            content="Add Reply"
+            labelPosition="left"
+            icon="edit"
+            primary
+          />
         </Form>
       </Comment.Group>
     </CollabChatContainer>
@@ -41,6 +46,8 @@ const Chat = ({ messages, showChat }) => (
 
 Chat.propTypes = {
   messages: PropTypes.arrayOf(ChatMessageT),
+  showChat: PropTypes.bool.isRequired,
+  username: PropTypes.string.isRequired,
 }
 
 Chat.defaultProps = {
