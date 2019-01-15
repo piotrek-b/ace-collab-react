@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 
 import rootReducer from './rootReducer'
+import websocket from './websocket'
 
 const initialState = {}
 const enhancers = []
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const composedEnhancers = compose(
   applyMiddleware(...middleware),
+  applyMiddleware(websocket),
   ...enhancers
 )
 
