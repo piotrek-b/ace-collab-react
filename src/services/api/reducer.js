@@ -1,10 +1,17 @@
 const api = (state = {
   editor: null,
   history: [],
+  username: '',
 }, action) => {
   const { type, payload } = action
 
   switch (type) {
+    case 'USERNAME_SET': {
+      return {
+        ...state,
+        username: payload,
+      }
+    }
     case 'WEBSOCKET_MESSAGE': {
       const { data } = payload
       const msgData = JSON.parse(data)
@@ -21,7 +28,7 @@ const api = (state = {
       const { history } = state
       return {
         ...state,
-        history: [...history, msgPayload],
+        history: [...history, msgData],
       }
     }
     default:

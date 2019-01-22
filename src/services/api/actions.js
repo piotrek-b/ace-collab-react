@@ -10,3 +10,11 @@ export const websocketConnect = () => ({
     url: 'ws://localhost:3000/ui',
   },
 })
+
+export const messageSend = (message) => ({
+  type: 'WEBSOCKET_SEND',
+  payload: {
+    type: 'MESSAGE',
+    payload: message,
+  },
+})

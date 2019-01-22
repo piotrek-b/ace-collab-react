@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 
-import { websocketConnect } from 'services/api/actions'
+import { websocketConnect, usernameSet } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
 import Chat from './components/Chat/Chat'
 
@@ -29,8 +29,11 @@ class Main extends Component {
   componentDidMount() {
     const {
       connectWebsocket,
+      setUsername,
+      username,
     } = this.props
 
+    setUsername(username)
     connectWebsocket()
   }
 
@@ -75,9 +78,15 @@ class Main extends Component {
 }
 
 Main.propTypes = {
+  username: PropTypes.string,
   // from connect
   connectWebsocket: PropTypes.func.isRequired,
+  setUsername: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
+}
+
+Main.defaultProps = {
+  username: 'TEST',
 }
 
 const mapStateToProps = (state) => ({
@@ -86,6 +95,7 @@ const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => bindActionCreators({
   connectWebsocket: websocketConnect,
+  setUsername: usernameSet,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)

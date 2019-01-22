@@ -11,16 +11,29 @@ const middleware = (store) => (next) => (action) => {
       websocket.onclose = (event) => store.dispatch({ type: 'WEBSOCKET_CLOSE', payload: event })
       websocket.onmessage = (event) => store.dispatch({ type: 'WEBSOCKET_MESSAGE', payload: event })
 
-      break;
+      break
 
     // User request to send a message
     case 'WEBSOCKET_SEND':
       websocket.send(JSON.stringify(action.payload))
-      break;
+      break
 
     // User request to disconnect
     case 'WEBSOCKET_DISCONNECT':
       websocket.close()
+      break
+
+    case 'WEBSOCKET_MESSAGE':
+      const data = JSON.parse(action.payload.data)
+      if (data.type === 'HISTORY') {
+        store.dispatch({
+          type: 'WEBSOCKET_SEND',
+          payload: {
+            type: 'USER_JOINED',
+            payload: store.getState().api.username,
+          },
+        })
+      }
       break
 
     default:

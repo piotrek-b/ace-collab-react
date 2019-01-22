@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Comment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Moment from 'react-moment'
@@ -18,11 +18,18 @@ const Metadata = styledSemantic(Comment.Metadata)`
     `}
 `
 
+const SessionAttendanceInfo = styledSemantic(Comment.Metadata)`
+  margin: 0;
+  width: 100%;
+  text-align: center;
+`
+
 const Text = styledSemantic(Comment.Text)`
     ${({ fromMe }) => fromMe && 'text-align: right;'}
 `
 
 const ChatMessage = ({
+  type,
   payload,
   metadata,
   username,
@@ -37,15 +44,24 @@ const ChatMessage = ({
   return (
     <Comment>
       <Comment.Content>
-        <Data fromMe={fromMe}>
-          <Comment.Author fromMe={fromMe}>{author}</Comment.Author>
-          <Metadata fromMe={fromMe}>
-            <Moment format="YYYY-MM-DD HH:mm:ss">
-              {time}
-            </Moment>
-          </Metadata>
-        </Data>
-        <Text fromMe={false}>{payload}</Text>
+        {type === 'USER_JOINED' || type === 'USER_LEFT' ? (
+          <SessionAttendanceInfo>
+            {type === 'USER_JOINED' && `${payload} joined.`}
+            {type === 'USER_LEFT' && `${payload} left.`}
+          </SessionAttendanceInfo>
+        ) : (
+          <Fragment>
+            <Data fromMe={fromMe}>
+              <Comment.Author fromMe={fromMe}>{author}</Comment.Author>
+              <Metadata fromMe={fromMe}>
+                <Moment format="YYYY-MM-DD HH:mm:ss">
+                  {time}
+                </Moment>
+              </Metadata>
+            </Data>
+            <Text fromMe={fromMe}>{payload}</Text>
+          </Fragment>
+        )}
       </Comment.Content>
     </Comment>
   )
