@@ -23,7 +23,7 @@ const middleware = (store) => (next) => (action) => {
       websocket.close()
       break
 
-    case 'WEBSOCKET_MESSAGE':
+    case 'WEBSOCKET_MESSAGE': {
       const data = JSON.parse(action.payload.data)
       if (data.type === 'HISTORY') {
         store.dispatch({
@@ -35,6 +35,7 @@ const middleware = (store) => (next) => (action) => {
         })
       }
       break
+    }
 
     default:
       break

@@ -11,6 +11,10 @@ export const websocketConnect = () => ({
   },
 })
 
+export const websocketDisconnect = () => ({
+  type: 'WEBSOCKET_DISCONNECT',
+})
+
 export const messageSend = (message) => ({
   type: 'WEBSOCKET_SEND',
   payload: {

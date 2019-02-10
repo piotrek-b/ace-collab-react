@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 
-import { websocketConnect, usernameSet } from 'services/api/actions'
+import { websocketConnect, websocketDisconnect, usernameSet } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
 import Chat from './components/Chat/Chat'
 
@@ -20,7 +20,7 @@ class Main extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      on: true,
+      on: false,
       showChat: false,
       username: 'Piotr',
     }
@@ -28,17 +28,25 @@ class Main extends Component {
 
   componentDidMount() {
     const {
-      connectWebsocket,
       setUsername,
       username,
     } = this.props
 
     setUsername(username)
-    connectWebsocket()
   }
 
   onPowerClick = () => {
+    const {
+      connectWebsocket,
+      disconnectWebsocket,
+    } = this.props
     this.setState((state) => ({ on: !state.on }))
+
+    if (!this.state.on) {
+      connectWebsocket()
+    } else {
+      disconnectWebsocket()
+    }
   }
 
   onChatClick = () => {
@@ -81,6 +89,7 @@ Main.propTypes = {
   username: PropTypes.string,
   // from connect
   connectWebsocket: PropTypes.func.isRequired,
+  disconnectWebsocket: PropTypes.func.isRequired,
   setUsername: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
 }
@@ -95,6 +104,7 @@ const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => bindActionCreators({
   connectWebsocket: websocketConnect,
+  disconnectWebsocket: websocketDisconnect,
   setUsername: usernameSet,
 }, dispatch)
 
