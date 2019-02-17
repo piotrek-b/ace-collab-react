@@ -25,12 +25,17 @@ const middleware = (store) => (next) => (action) => {
 
     case 'WEBSOCKET_MESSAGE': {
       const data = JSON.parse(action.payload.data)
+      const {
+        api: {
+          username,
+        },
+      } = store.getState()
       if (data.type === 'HISTORY') {
         store.dispatch({
           type: 'WEBSOCKET_SEND',
           payload: {
             type: 'USER_JOINED',
-            payload: store.getState().api.username,
+            payload: username,
           },
         })
       }

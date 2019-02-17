@@ -4,10 +4,10 @@ export const usernameSet = (userName) => (dispatch) => dispatch({
   payload: userName,
 })
 
-export const websocketConnect = () => ({
+export const websocketConnect = (host, port, ssl, docId, username, token) => ({
   type: 'WEBSOCKET_CONNECT',
   payload: {
-    url: 'ws://localhost:3000/ui',
+    url: `ws${ssl ? 's' : ''}://${host}:${port}/ui/${docId}?username=${username}&token=${token}`,
   },
 })
 

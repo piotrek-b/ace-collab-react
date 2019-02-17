@@ -4,9 +4,37 @@ import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(<App />, document.querySelector('body'))
+const getDocId = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const docId = urlParams.get('sharedb_id') || ''
+
+  return docId
+}
+
+const username = window.prompt('username')
+
+const sampleConfig = {
+  anchorDOM: document.querySelector('#editor'),
+  mode: 'ace/mode/javascript',
+  theme: 'ace/theme/monokai',
+  server: {
+    docId: getDocId(),
+    host: 'localhost',
+    port: '3334',
+    username,
+    ssl: false,
+  },
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister()
+
+const runAceCollab = (config = sampleConfig) => {
+  ReactDOM.render(<App config={config} />, document.querySelector('main'))
+}
+
+runAceCollab()
+
+export default runAceCollab

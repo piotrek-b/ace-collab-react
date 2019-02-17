@@ -4,16 +4,20 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
+import Editor from 'ace-collab/lib'
 
 import { websocketConnect, websocketDisconnect, usernameSet } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
 import Chat from './components/Chat/Chat'
+import { modalOpen } from '../../services/modal/actions'
+import { ModalTypes } from '../../consts'
 
 const FixedContainer = styled.div`
   position: fixed;
   width: 250px;
   top: 60px;
   right: 60px;
+  z-index: 999;
 `
 
 class Main extends Component {
@@ -26,24 +30,36 @@ class Main extends Component {
     }
   }
 
-  componentDidMount() {
-    const {
-      setUsername,
-      username,
-    } = this.props
-
-    setUsername(username)
+  onAskForAccess = (message) => {
+    const { openModal } = this.props
+    return openModal(ModalTypes.ASK_FOR_ACCESS_MODAL, {
+      username: message.payload,
+    })
   }
 
-  onPowerClick = () => {
+  onPowerClick = async () => {
     const {
       connectWebsocket,
       disconnectWebsocket,
+      config,
     } = this.props
     this.setState((state) => ({ on: !state.on }))
 
+    const { server, ...rest } = config
+
     if (!this.state.on) {
-      connectWebsocket()
+      const editor = new Editor(rest)
+
+      const { doc, token, username } = await editor.init(server, this.onAskForAccess)
+      const { docId, host, port, ssl } = server
+
+      if (!docId) {
+        const newURL = (
+          `${window.location.protocol}//${window.location.host}${window.location.pathname}?sharedb_id=${doc.id}`
+        )
+        window.history.pushState({ path: newURL }, '', newURL)
+      }
+      connectWebsocket(host, port, ssl, doc.id, username, token)
     } else {
       disconnectWebsocket()
     }
@@ -54,7 +70,7 @@ class Main extends Component {
   }
 
   onShareClick = () => {
-    copy('12345')
+    copy(window.location.href)
   }
 
   render() {
@@ -86,16 +102,12 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  username: PropTypes.string,
+  config: PropTypes.object.isRequired,
   // from connect
   connectWebsocket: PropTypes.func.isRequired,
   disconnectWebsocket: PropTypes.func.isRequired,
-  setUsername: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
-}
-
-Main.defaultProps = {
-  username: 'TEST',
+  openModal: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -106,6 +118,7 @@ export const mapDispatchToProps = (dispatch) => bindActionCreators({
   connectWebsocket: websocketConnect,
   disconnectWebsocket: websocketDisconnect,
   setUsername: usernameSet,
+  openModal: modalOpen,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)

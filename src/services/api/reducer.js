@@ -1,3 +1,20 @@
+const initialState = {
+  config: {
+    anchorDOM: null,
+    mode: '',
+    theme: '',
+    server: {
+      docId: '',
+      host: '',
+      port: '',
+      username: '',
+      ssl: false,
+    },
+  },
+  editor: null,
+  history: [],
+}
+
 const api = (state = {
   editor: null,
   history: [],
