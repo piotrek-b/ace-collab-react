@@ -14,11 +14,11 @@ const ConfirmationModal = ({
 }) => {
   const confirmCallback = async (...args) => {
     const data = await onConfirm(...args)
-    resolve({ resolved: true, data })
+    resolve(true, data)
   }
   const dismissCallback = async (...args) => {
     const data = await onDismiss(...args)
-    resolve({ resolved: false, data })
+    resolve(false, data)
   }
   return (
     <Modal open size="small">

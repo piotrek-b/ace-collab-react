@@ -39,7 +39,7 @@ class Main extends Component {
   onAskForAccess = async (message) => {
     const { openModal } = this.props
 
-    const { resolved } = await openModal(ModalTypes.ASK_FOR_ACCESS_MODAL, {
+    const [resolved] = await openModal(ModalTypes.ASK_FOR_ACCESS_MODAL, {
       username: message.payload,
     })
 

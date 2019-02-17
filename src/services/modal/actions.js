@@ -19,8 +19,8 @@ export const modalOpen = (modalType, modalProps = {}) => (dispatch) => (
       resolve,
       reject,
     }))
-  }).then((...data) => {
+  }).then((resolved, data) => {
     dispatch(modalClosed())
-    return { ...data }
+    return [resolved, data]
   })
 )

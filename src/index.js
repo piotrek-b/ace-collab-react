@@ -20,7 +20,7 @@ const sampleConfig = {
   server: {
     docId: getDocId(),
     host: 'localhost',
-    port: '3334',
+    port: '3333',
     username,
     ssl: false,
   },

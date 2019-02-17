@@ -14,14 +14,20 @@ const middleware = (store) => (next) => (action) => {
       break
 
     // User request to send a message
-    case 'WEBSOCKET_SEND':
-      websocket.send(JSON.stringify(action.payload))
+    case 'WEBSOCKET_SEND': {
+      if (websocket) {
+        websocket.send(JSON.stringify(action.payload))
+      }
       break
+    }
 
     // User request to disconnect
-    case 'WEBSOCKET_DISCONNECT':
-      websocket.close()
+    case 'WEBSOCKET_DISCONNECT': {
+      if (websocket) {
+        websocket.close()
+      }
       break
+    }
 
     case 'WEBSOCKET_MESSAGE': {
       const data = JSON.parse(action.payload.data)
