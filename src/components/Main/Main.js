@@ -6,11 +6,12 @@ import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 import Editor from 'ace-collab/lib'
 
-import { websocketConnect, websocketDisconnect, usernameSet } from 'services/api/actions'
+import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
 import Chat from './components/Chat/Chat'
 import { modalOpen } from '../../services/modal/actions'
 import { ModalTypes } from '../../consts'
+import { configSet } from '../../services/api/actions'
 
 const FixedContainer = styled.div`
   position: fixed;
@@ -26,15 +27,23 @@ class Main extends Component {
     this.state = {
       on: false,
       showChat: false,
-      username: 'Piotr',
     }
   }
 
-  onAskForAccess = (message) => {
+  componentDidMount() {
+    const { initialConfig, setConfig } = this.props
+
+    setConfig(initialConfig)
+  }
+
+  onAskForAccess = async (message) => {
     const { openModal } = this.props
-    return openModal(ModalTypes.ASK_FOR_ACCESS_MODAL, {
+
+    const { resolved } = await openModal(ModalTypes.ASK_FOR_ACCESS_MODAL, {
       username: message.payload,
     })
+
+    return resolved
   }
 
   onPowerClick = async () => {
@@ -42,26 +51,36 @@ class Main extends Component {
       connectWebsocket,
       disconnectWebsocket,
       config,
+      openModal,
     } = this.props
     this.setState((state) => ({ on: !state.on }))
 
     const { server, ...rest } = config
 
     if (!this.state.on) {
-      const editor = new Editor(rest)
+      try {
+        const editor = new Editor(rest)
 
-      const { doc, token, username } = await editor.init(server, this.onAskForAccess)
-      const { docId, host, port, ssl } = server
+        const { doc, token, username } = await editor.init(server, this.onAskForAccess)
+        const { docId, host, port, ssl } = server
 
-      if (!docId) {
-        const newURL = (
-          `${window.location.protocol}//${window.location.host}${window.location.pathname}?sharedb_id=${doc.id}`
-        )
-        window.history.pushState({ path: newURL }, '', newURL)
+        if (!docId) {
+          const newURL = (
+            `${window.location.protocol}//${window.location.host}${window.location.pathname}?sharedb_id=${doc.id}`
+          )
+          window.history.pushState({ path: newURL }, '', newURL)
+        }
+        connectWebsocket(host, port, ssl, doc.id, username, token)
+        this.setState({ on: true })
+      } catch (error) {
+        openModal(ModalTypes.ALERT_MODAL, {
+          title: 'No access',
+          text: 'You were not provided with the access to the session',
+        })
       }
-      connectWebsocket(host, port, ssl, doc.id, username, token)
     } else {
       disconnectWebsocket()
+      this.setState({ on: false })
     }
   }
 
@@ -75,13 +94,18 @@ class Main extends Component {
 
   render() {
     const {
+      config,
       history,
     } = this.props
     const {
       on,
       showChat,
-      username,
     } = this.state
+    const {
+      server: {
+        username,
+      },
+    } = config
     return (
       <FixedContainer>
         <ControlPanel
@@ -102,23 +126,26 @@ class Main extends Component {
 }
 
 Main.propTypes = {
-  config: PropTypes.object.isRequired,
+  initialConfig: PropTypes.object.isRequired,
   // from connect
+  config: PropTypes.object.isRequired,
   connectWebsocket: PropTypes.func.isRequired,
   disconnectWebsocket: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
   openModal: PropTypes.func.isRequired,
+  setConfig: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
+  config: state.api.config,
   history: state.api.history,
 })
 
 export const mapDispatchToProps = (dispatch) => bindActionCreators({
   connectWebsocket: websocketConnect,
   disconnectWebsocket: websocketDisconnect,
-  setUsername: usernameSet,
   openModal: modalOpen,
+  setConfig: configSet,
 }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)

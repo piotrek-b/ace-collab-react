@@ -1,7 +1,7 @@
-export const USERNAME_SET = 'USERNAME_SET'
-export const usernameSet = (userName) => (dispatch) => dispatch({
-  type: USERNAME_SET,
-  payload: userName,
+export const CONFIG_SET = 'CONFIG_SET'
+export const configSet = (config) => (dispatch) => dispatch({
+  type: CONFIG_SET,
+  payload: config,
 })
 
 export const websocketConnect = (host, port, ssl, docId, username, token) => ({

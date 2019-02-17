@@ -32,7 +32,7 @@ const sampleConfig = {
 serviceWorker.unregister()
 
 const runAceCollab = (config = sampleConfig) => {
-  ReactDOM.render(<App config={config} />, document.querySelector('main'))
+  ReactDOM.render(<App initialConfig={config} />, document.querySelector('main'))
 }
 
 runAceCollab()

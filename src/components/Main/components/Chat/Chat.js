@@ -66,7 +66,7 @@ class Chat extends Component {
       <CollabChatContainer>
         <Comment.Group>
           <Header as="h3" dividing>
-            Chat
+            Chat ({username})
           </Header>
           <StyledDiv ref={(ref) => { this.messageList = ref }}>
             {messages.map((message) => (

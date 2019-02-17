@@ -15,18 +15,20 @@ const initialState = {
   history: [],
 }
 
-const api = (state = {
-  editor: null,
-  history: [],
-  username: '',
-}, action) => {
+const api = (state = initialState, action) => {
   const { type, payload } = action
 
   switch (type) {
-    case 'USERNAME_SET': {
+    case 'CONFIG_SET': {
       return {
         ...state,
-        username: payload,
+        config: { ...payload },
+      }
+    }
+    case 'EDITOR_INIT': {
+      return {
+        ...state,
+        editor: payload,
       }
     }
     case 'WEBSOCKET_MESSAGE': {

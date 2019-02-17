@@ -5,8 +5,10 @@ import { connect } from 'react-redux'
 import { ModalTypes } from 'consts'
 import AskForAccessModal from './Modal/AskForAccessModal'
 import ConfirmationModal from './Modal/ConfirmationModal'
+import AlertModal from './Modal/AlertModal'
 
 const MODAL_COMPONENTS = {
+  [ModalTypes.ALERT_MODAL]: AlertModal,
   [ModalTypes.ASK_FOR_ACCESS_MODAL]: AskForAccessModal,
   [ModalTypes.CONFIRMATION_MODAL]: ConfirmationModal,
 }
