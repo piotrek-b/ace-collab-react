@@ -20,7 +20,7 @@ const IconContainer = styled.div`
   padding: 5px;
 `
 
-const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, showChat }) => (
+const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, onUsersClick, showChat, showUsers }) => (
   <StyledSegment>
     <Button.Group>
       <Popup
@@ -52,6 +52,16 @@ const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, showChat })
           </Button>
         )}
         content={`${showChat ? 'Close' : 'Open'} chat`}
+      />
+      <Popup
+        trigger={(
+          <Button icon onClick={onUsersClick} disabled={!on} active={on && showUsers} primary={on && showUsers}>
+            <IconContainer>
+              <Icon name="user" />
+            </IconContainer>
+          </Button>
+        )}
+        content={`${showUsers ? 'Hide' : 'Show'} active users`}
       />
     </Button.Group>
   </StyledSegment>

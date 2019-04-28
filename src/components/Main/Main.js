@@ -9,6 +9,7 @@ import Editor from 'ace-collab/lib'
 import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
 import Chat from './components/Chat/Chat'
+import UserList from './components/UserList/UserList'
 import { modalOpen } from '../../services/modal/actions'
 import { ModalTypes } from '../../consts'
 import { configSet } from '../../services/api/actions'
@@ -27,6 +28,7 @@ class Main extends Component {
     this.state = {
       on: false,
       showChat: false,
+      showUsers: false,
     }
   }
 
@@ -85,7 +87,18 @@ class Main extends Component {
   }
 
   onChatClick = () => {
-    this.setState((state) => ({ showChat: !state.showChat }))
+    this.setState((state) => ({
+      showChat: !state.showChat,
+      showUsers: false,
+    }))
+  }
+
+
+  onUsersClick = () => {
+    this.setState((state) => ({
+      showChat: false,
+      showUsers: !state.showUsers,
+    }))
   }
 
   onShareClick = () => {
@@ -100,6 +113,7 @@ class Main extends Component {
     const {
       on,
       showChat,
+      showUsers,
     } = this.state
     const {
       server: {
@@ -113,11 +127,18 @@ class Main extends Component {
           onPowerClick={this.onPowerClick}
           onChatClick={this.onChatClick}
           onShareClick={this.onShareClick}
+          onUsersClick={this.onUsersClick}
           showChat={showChat}
+          showUsers={showUsers}
         />
         <Chat
           messages={history}
           showChat={on && showChat}
+          username={username}
+        />
+        <UserList
+          messages={history}
+          showUsers={on && showUsers}
           username={username}
         />
       </FixedContainer>

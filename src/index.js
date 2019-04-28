@@ -19,7 +19,7 @@ const sampleConfig = {
   theme: 'ace/theme/monokai',
   server: {
     docId: getDocId(),
-    host: 'localhost',
+    host: '192.168.0.17',
     port: '3333',
     username,
     ssl: false,
