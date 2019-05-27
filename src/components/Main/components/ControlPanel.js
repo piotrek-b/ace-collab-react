@@ -8,6 +8,7 @@ import styledSemantic from 'utils/styledSemantic'
 const StyledSegment = styledSemantic(Segment)`
   display: flex;
   padding: 0;
+  width: 100%;
 
   * {
     flex-grow: 1;

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 import Editor from 'ace-collab/lib'
+import { Button, Icon } from 'semantic-ui-react'
 
 import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
@@ -14,18 +15,37 @@ import { modalOpen } from '../../services/modal/actions'
 import { ModalTypes } from '../../consts'
 import { configSet } from '../../services/api/actions'
 
+import styledSemantic from '../../utils/styledSemantic'
+
 const FixedContainer = styled.div`
   position: fixed;
   width: 250px;
   top: 60px;
   right: 60px;
   z-index: 999;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`
+
+const FixedShowContainer = styled.div`
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  top: 0;
+  right: 0;
+  z-index: 999;
+`
+
+const StyledIcon = styledSemantic(Icon)`
+    margin: 0 !important;
 `
 
 class Main extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      visible: true,
       on: false,
       showChat: false,
       showUsers: false,
@@ -34,6 +54,8 @@ class Main extends Component {
 
   componentDidMount() {
     const { initialConfig, setConfig } = this.props
+
+    this.editor = new Editor(initialConfig)
 
     setConfig(initialConfig)
   }
@@ -54,16 +76,16 @@ class Main extends Component {
       disconnectWebsocket,
       config,
       openModal,
+        setConfig,
     } = this.props
     this.setState((state) => ({ on: !state.on }))
 
-    const { server, ...rest } = config
+    const { server } = config
 
     if (!this.state.on) {
       try {
-        const editor = new Editor(rest)
 
-        const { doc, token, username } = await editor.init(server, this.onAskForAccess)
+        const { doc, token, username } = await this.editor.init(server, this.onAskForAccess)
         const { docId, host, port, ssl } = server
 
         if (!docId) {
@@ -73,6 +95,7 @@ class Main extends Component {
           window.history.pushState({ path: newURL }, '', newURL)
         }
         connectWebsocket(host, port, ssl, doc.id, username, token)
+          setConfig({ ...config, docId: doc.id })
         this.setState({ on: true })
       } catch (error) {
         openModal(ModalTypes.ALERT_MODAL, {
@@ -106,6 +129,16 @@ class Main extends Component {
   }
 
   render() {
+    if (!this.state.visible) {
+      return (
+          <FixedShowContainer>
+            <Button onClick={() => this.setState({ visible: true })}>
+              <StyledIcon name="eye" />
+            </Button>
+          </FixedShowContainer>
+      )
+    }
+
     const {
       config,
       history,
@@ -122,6 +155,9 @@ class Main extends Component {
     } = config
     return (
       <FixedContainer>
+        <Button onClick={() => this.setState({ visible: false })}>
+          <StyledIcon name="hide" />
+        </Button>
         <ControlPanel
           on={on}
           onPowerClick={this.onPowerClick}

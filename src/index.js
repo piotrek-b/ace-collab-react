@@ -19,7 +19,7 @@ const sampleConfig = {
   theme: 'ace/theme/monokai',
   server: {
     docId: getDocId(),
-    host: '192.168.0.17',
+    host: '127.0.0.1',
     port: '3333',
     username,
     ssl: false,
@@ -34,7 +34,5 @@ serviceWorker.unregister()
 const runAceCollab = (config = sampleConfig) => {
   ReactDOM.render(<App initialConfig={config} />, document.querySelector('main'))
 }
-
-runAceCollab()
 
 export default runAceCollab
