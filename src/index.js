@@ -31,8 +31,10 @@ const sampleConfig = {
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister()
 
-const runAceCollab = (config = sampleConfig) => {
+function runAceCollab(config = sampleConfig) {
   ReactDOM.render(<App initialConfig={config} />, document.querySelector('main'))
 }
+
+window.run = runAceCollab
 
 export default runAceCollab

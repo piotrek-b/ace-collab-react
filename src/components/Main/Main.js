@@ -78,7 +78,6 @@ class Main extends Component {
       openModal,
         setConfig,
     } = this.props
-    this.setState((state) => ({ on: !state.on }))
 
     const { server } = config
 
