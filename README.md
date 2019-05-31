@@ -3,35 +3,42 @@
 ### Prerequisites
 
 Make sure that you have installed:
-- node
-- npm
+- *NodeJS* (v8.10.0)
+- *npm* (v3.5.2)
 
 ### Installing
 
 1. Clone the repository
 
-```git
+```
 git clone https://github.com/piotrek-b/ace-collab-react.git && cd ace-collab-react
 ```
 
 2. Run following command
 
 ```
-npm run build
+npm run bundle
 ```
 
 3. After successful build, copy the bundled js file into your index.html directory
 
+a) Linux
 ```
-cp ./build/static/js/main.[hash].chunk.js YOUR_INDEX_HTML_DIR
+mkdir YOUR_INDEX_HTML_DIR/collab && cp -a ./dist/. YOUR_INDEX_HTML_DIR/collab
 ```
+
+b) Windows
+```
+mkdir "YOUR_INDEX_HTML_DIR/collab" && xcopy /s .\dist YOUR_INDEX_HTML_DIR\collab
+```
+
 
 4. Include the bundled script in your index.html file
 
 ```html
 ...
 
-<script src="./main.[hash].chunk.js"></script>
+<script src="./collab/bundle.min.js"></script>
 
 ...
 ```
@@ -40,21 +47,22 @@ cp ./build/static/js/main.[hash].chunk.js YOUR_INDEX_HTML_DIR
 
 ```html
 <script>
+    var editorElement = document.querySelector('#editor');
+    var interfaceElement = document.querySelector('main');
+    
     var options = {
-      anchorDOM: document.querySelector('#editor'),
+      anchorDOM: editorElement,
       mode: 'ace/mode/javascript',
       theme: 'ace/theme/monokai',
       server: {
-        docId: getDocId(),
         host: '127.0.0.1',
-        port: '3333',
-        username,
+        port: '0000',
+        username: 'John Doe',
         ssl: false
       }
     };
-    var interfaceContainer = document.querySelector('main');
 
 
-    runAceCollab(options, interfaceContainer);
+    runAceCollab(options, interfaceElement);
 </script>
 ```
