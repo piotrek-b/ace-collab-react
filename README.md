@@ -39,14 +39,15 @@ mkdir "YOUR_INDEX_HTML_DIR/collab" && xcopy /s .\dist YOUR_INDEX_HTML_DIR\collab
 ...
 
 <script src="./collab/bundle.min.js"></script>
+<script src="./main.js"></script>
 
 ...
 ```
 
 5. Use the method in code:
 
+*main.js:*
 ```html
-<script>
     var editorElement = document.querySelector('#editor');
     var interfaceElement = document.querySelector('main');
     
@@ -64,5 +65,4 @@ mkdir "YOUR_INDEX_HTML_DIR/collab" && xcopy /s .\dist YOUR_INDEX_HTML_DIR\collab
 
 
     runAceCollab(options, interfaceElement);
-</script>
 ```

@@ -40,6 +40,6 @@ function runAceCollab(configArg = null) {
   ReactDOM.render(<App initialConfig={config} />, document.querySelector('main'))
 }
 
-window.run = runAceCollab
+window.runAceCollab = runAceCollab
 
 export default runAceCollab
