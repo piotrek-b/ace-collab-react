@@ -6,7 +6,6 @@ import store from 'store/store'
 import Main from 'components/Main/Main'
 import ModalRoot from 'components/ModalRoot'
 
-
 const App = (props) => (
   <Provider store={store}>
     <Main {...props} />

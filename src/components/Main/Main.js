@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 import Editor from 'ace-collab/lib'
 import { Button, Icon, Popup } from 'semantic-ui-react'
+import {SemanticToastContainer, toast} from 'react-semantic-toasts';
 
 import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
@@ -84,10 +85,14 @@ class Main extends Component {
 
     if (!this.state.on) {
       try {
-        openModal(ModalTypes.ALERT_MODAL, {
-          title: 'Connecting',
-          text: 'Connecting to the session...',
-        })
+        if (server.docId) {
+          toast({
+            type: 'info',
+            icon: 'info',
+            title: 'Connecting...',
+            description: 'You are being authorized.',
+          })
+        }
         const { doc, token, username } = await this.editor.init(server, this.onAskForAccess)
         const { docId, host, port, ssl } = server
 
@@ -101,6 +106,12 @@ class Main extends Component {
         setConfig({ ...config, docId: doc.id })
         closeModal()
         this.setState({ on: true })
+        toast({
+          type: 'success',
+          icon: 'info',
+          title: 'Success!',
+          description: 'Successfully joined the session.',
+        })
       } catch (error) {
         openModal(ModalTypes.ALERT_MODAL, {
           title: 'No access',
@@ -130,6 +141,12 @@ class Main extends Component {
 
   onShareClick = () => {
     copy(window.location.href)
+    toast({
+      type: 'info',
+      icon: 'info',
+      title: 'Share',
+      description: 'Session link copied!',
+    })
   }
 
   render() {
@@ -191,6 +208,8 @@ class Main extends Component {
           showUsers={on && showUsers}
           username={username}
         />
+
+        <SemanticToastContainer position="bottom-right" />
       </FixedContainer>
     )
   }
