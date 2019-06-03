@@ -41,7 +41,7 @@ ConfirmationModal.propTypes = {
 }
 
 ConfirmationModal.defaultProps = {
-  icon: '',
+  icon: 'alarm',
   onConfirm: () => ({}),
   confirmLabel: 'OK',
   text: '',

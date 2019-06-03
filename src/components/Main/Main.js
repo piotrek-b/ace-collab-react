@@ -5,13 +5,13 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 import Editor from 'ace-collab/lib'
-import { Button, Icon } from 'semantic-ui-react'
+import { Button, Icon, Popup } from 'semantic-ui-react'
 
 import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
 import Chat from './components/Chat/Chat'
 import UserList from './components/UserList/UserList'
-import { modalOpen } from '../../services/modal/actions'
+import { modalClosed, modalOpen } from '../../services/modal/actions'
 import { ModalTypes } from '../../consts'
 import { configSet } from '../../services/api/actions'
 
@@ -76,14 +76,18 @@ class Main extends Component {
       disconnectWebsocket,
       config,
       openModal,
-        setConfig,
+      closeModal,
+      setConfig,
     } = this.props
 
     const { server } = config
 
     if (!this.state.on) {
       try {
-
+        openModal(ModalTypes.ALERT_MODAL, {
+          title: 'Connecting',
+          text: 'Connecting to the session...',
+        })
         const { doc, token, username } = await this.editor.init(server, this.onAskForAccess)
         const { docId, host, port, ssl } = server
 
@@ -94,12 +98,13 @@ class Main extends Component {
           window.history.pushState({ path: newURL }, '', newURL)
         }
         connectWebsocket(host, port, ssl, doc.id, username, token)
-          setConfig({ ...config, docId: doc.id })
+        setConfig({ ...config, docId: doc.id })
+        closeModal()
         this.setState({ on: true })
       } catch (error) {
         openModal(ModalTypes.ALERT_MODAL, {
           title: 'No access',
-          text: 'You were not provided with the access to the session',
+          text: 'You were not provided with the access to the session.',
         })
       }
     } else {
@@ -130,11 +135,16 @@ class Main extends Component {
   render() {
     if (!this.state.visible) {
       return (
-          <FixedShowContainer>
-            <Button onClick={() => this.setState({ visible: true })}>
-              <StyledIcon name="eye" />
-            </Button>
-          </FixedShowContainer>
+        <Popup
+          trigger={(
+            <FixedShowContainer>
+              <Button onClick={() => this.setState({ visible: true })}>
+                <StyledIcon name="eye" />
+              </Button>
+            </FixedShowContainer>
+              )}
+          content="Show panel"
+        />
       )
     }
 
@@ -154,9 +164,14 @@ class Main extends Component {
     } = config
     return (
       <FixedContainer>
-        <Button onClick={() => this.setState({ visible: false })}>
-          <StyledIcon name="hide" />
-        </Button>
+        <Popup
+          trigger={(
+            <Button onClick={() => this.setState({ visible: false })}>
+              <StyledIcon name="hide" />
+            </Button>
+        )}
+          content="Hide panel"
+        />
         <ControlPanel
           on={on}
           onPowerClick={this.onPowerClick}
@@ -189,6 +204,7 @@ Main.propTypes = {
   disconnectWebsocket: PropTypes.func.isRequired,
   history: PropTypes.array.isRequired,
   openModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
   setConfig: PropTypes.func.isRequired,
 }
 
@@ -201,6 +217,7 @@ export const mapDispatchToProps = (dispatch) => bindActionCreators({
   connectWebsocket: websocketConnect,
   disconnectWebsocket: websocketDisconnect,
   openModal: modalOpen,
+  closeModal: modalClosed,
   setConfig: configSet,
 }, dispatch)
 
