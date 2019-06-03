@@ -66,7 +66,7 @@ class Chat extends Component {
       <CollabChatContainer>
         <Comment.Group>
           <Header as="h3" dividing>
-            Chat ({username})
+            Czat ({username})
           </Header>
           <StyledDiv ref={(ref) => { this.messageList = ref }}>
             {messages.map((message) => (
@@ -81,7 +81,7 @@ class Chat extends Component {
               onKeyDown={this.onKeyDown}
             />
             <Button
-              content="Send"
+              content="Wyślij"
               disabled={!value}
               labelPosition="left"
               icon="edit"

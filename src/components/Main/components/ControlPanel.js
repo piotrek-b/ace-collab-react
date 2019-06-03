@@ -32,7 +32,8 @@ const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, onUsersClic
             </IconContainer>
           </Button>
         )}
-        content={`Switch ${on ? 'off' : 'on'} the collaborative session`}
+        /* eslint-disable-next-line no-irregular-whitespace */
+        content={`${on ? 'Rozłącz' : 'Połącz'} się z sesją kolaboracyjną`}
       />
       <Popup
         trigger={(
@@ -42,7 +43,7 @@ const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, onUsersClic
             </IconContainer>
           </Button>
         )}
-        content="Share session id"
+        content="Udostępnij adres sesji"
       />
       <Popup
         trigger={(
@@ -52,7 +53,7 @@ const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, onUsersClic
             </IconContainer>
           </Button>
         )}
-        content={`${showChat ? 'Close' : 'Open'} chat`}
+        content={`${showChat ? 'Ukryj' : 'Pokaż'} czat`}
       />
       <Popup
         trigger={(
@@ -62,7 +63,7 @@ const ControlPanel = ({ on, onChatClick, onPowerClick, onShareClick, onUsersClic
             </IconContainer>
           </Button>
         )}
-        content={`${showUsers ? 'Hide' : 'Show'} active users`}
+        content={`${showUsers ? 'Ukryj' : 'Pokaż'} status uczestników`}
       />
     </Button.Group>
   </StyledSegment>

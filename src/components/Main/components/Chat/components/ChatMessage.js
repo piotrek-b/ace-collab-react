@@ -46,8 +46,8 @@ const ChatMessage = ({
       <Comment.Content>
         {type === 'USER_JOINED' || type === 'USER_LEFT' ? (
           <SessionAttendanceInfo>
-            {type === 'USER_JOINED' && `${payload} joined.`}
-            {type === 'USER_LEFT' && `${payload} left.`}
+            {type === 'USER_JOINED' && `${payload} dołączył do sesji.`}
+            {type === 'USER_LEFT' && `${payload} opuścił sesję.`}
           </SessionAttendanceInfo>
         ) : (
           <Fragment>

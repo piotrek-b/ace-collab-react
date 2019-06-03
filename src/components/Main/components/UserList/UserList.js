@@ -55,7 +55,7 @@ class UserList extends Component {
       <UserListContainer>
         <Comment.Group>
           <Header as="h3" dividing>
-            Active Users
+            Uczestnicy
           </Header>
           <StyledDiv ref={(ref) => { this.messageList = ref }}>
             {Object.keys(activeUsers).map((key) => (

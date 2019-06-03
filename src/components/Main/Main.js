@@ -89,8 +89,8 @@ class Main extends Component {
           toast({
             type: 'info',
             icon: 'info',
-            title: 'Connecting...',
-            description: 'You are being authorized.',
+            title: 'Autoryzacja',
+            description: 'Poczekaj, aż proces autoryzacji dobiegnie końca...',
           })
         }
         const { doc, token, username } = await this.editor.init(server, this.onAskForAccess)
@@ -109,13 +109,13 @@ class Main extends Component {
         toast({
           type: 'success',
           icon: 'info',
-          title: 'Success!',
-          description: 'Successfully joined the session.',
+          title: 'Sukces!',
+          description: 'Połączenie nawiązane pomyślnie.',
         })
       } catch (error) {
         openModal(ModalTypes.ALERT_MODAL, {
-          title: 'No access',
-          text: 'You were not provided with the access to the session.',
+          title: 'Brak dostępu',
+          text: 'Nie udzielono dostępu do sesji.',
         })
       }
     } else {
@@ -144,8 +144,8 @@ class Main extends Component {
     toast({
       type: 'info',
       icon: 'info',
-      title: 'Share',
-      description: 'Session link copied!',
+      title: 'Udostępnij',
+      description: 'Link do sesji skopiowano do schowka!',
     })
   }
 
@@ -160,7 +160,7 @@ class Main extends Component {
               </Button>
             </FixedShowContainer>
               )}
-          content="Show panel"
+          content="Pokaż panel"
         />
       )
     }
@@ -187,7 +187,7 @@ class Main extends Component {
               <StyledIcon name="hide" />
             </Button>
         )}
-          content="Hide panel"
+          content="Ukryj panel"
         />
         <ControlPanel
           on={on}

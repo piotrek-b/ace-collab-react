@@ -7,8 +7,8 @@ const AskForAccessModal = ({ username, ...props }) => (
   <ConfirmationModal
     icon="address card"
     confirmLabel="OK"
-    title={`${username} wants to join`}
-    text={`Can ${username} join the session?`}
+    title={`${username} chce dołączyć do sesji`}
+    text={`Czy udzielić zgody na dołączenie do sesji użytkownikowi ${username}?`}
     {...props}
   />
 )
