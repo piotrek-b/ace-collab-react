@@ -5,8 +5,8 @@ import PropTypes from 'prop-types'
 import { Comment, Header, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 
-import { ChatMessageT } from 'types'
 import { messageSend } from 'services/api/actions'
+import { getActiveUsers } from 'services/api/selectors'
 import styledSemantic from 'utils/styledSemantic'
 import UserStatus from './components/UserStatus'
 
@@ -25,21 +25,6 @@ class UserList extends Component {
     this.scrollToBottom()
   }
 
-  getActiveUsers() {
-    const { messages } = this.props
-    const activeUsers = {}
-
-    messages.forEach((message) => {
-      if (message.type === 'USER_JOINED') {
-        activeUsers[message.payload] = true
-      } else if (message.type === 'USER_LEFT') {
-        activeUsers[message.payload] = false
-      }
-    })
-
-    return activeUsers
-  }
-
   scrollToBottom() {
     if (this.messageList) {
       const { clientHeight, scrollHeight } = this.messageList
@@ -49,8 +34,7 @@ class UserList extends Component {
   }
 
   render() {
-    const { showUsers, username } = this.props
-    const activeUsers = this.getActiveUsers()
+    const { activeUsers, showUsers, username } = this.props
     return showUsers ? (
       <UserListContainer>
         <Comment.Group>
@@ -69,17 +53,21 @@ class UserList extends Component {
 }
 
 UserList.propTypes = {
-  messages: PropTypes.arrayOf(ChatMessageT),
+  activeUsers: PropTypes.object,
   showUsers: PropTypes.bool.isRequired,
   username: PropTypes.string.isRequired,
 }
 
 UserList.defaultProps = {
-  messages: [],
+  activeUsers: {},
 }
+
+const mapStateToProps = (state) => ({
+  activeUsers: getActiveUsers(state),
+})
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   sendMessage: messageSend,
 }, dispatch)
 
-export default connect(null, mapDispatchToProps)(UserList)
+export default connect(mapStateToProps, mapDispatchToProps)(UserList)

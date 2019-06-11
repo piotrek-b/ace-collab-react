@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import copy from 'copy-to-clipboard'
 import Editor from 'ace-collab/lib'
 import { Button, Icon, Popup } from 'semantic-ui-react'
-import {SemanticToastContainer, toast} from 'react-semantic-toasts';
+import { SemanticToastContainer, toast } from 'react-semantic-toasts'
 
 import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
@@ -59,6 +59,10 @@ class Main extends Component {
     this.editor = new Editor(initialConfig)
 
     setConfig(initialConfig)
+
+    if (initialConfig.server.docId) {
+      this.onPowerClick(initialConfig)
+    }
   }
 
   onAskForAccess = async (message) => {
@@ -71,11 +75,10 @@ class Main extends Component {
     return resolved
   }
 
-  onPowerClick = async () => {
+  onPowerClick = async (config) => {
     const {
       connectWebsocket,
       disconnectWebsocket,
-      config,
       openModal,
       closeModal,
       setConfig,
@@ -110,12 +113,13 @@ class Main extends Component {
           type: 'success',
           icon: 'info',
           title: 'Sukces!',
-          description: 'Połączenie nawiązane pomyślnie.',
+          description: 'Sesja Live Code uruchomiona.',
         })
       } catch (error) {
+        debugger
         openModal(ModalTypes.ALERT_MODAL, {
           title: 'Brak dostępu',
-          text: 'Nie udzielono dostępu do sesji.',
+          text: 'Nie udzielono dostępu do sesji Live Code.',
         })
       }
     } else {
@@ -179,6 +183,7 @@ class Main extends Component {
         username,
       },
     } = config
+
     return (
       <FixedContainer>
         <Popup
@@ -190,8 +195,9 @@ class Main extends Component {
           content="Ukryj panel"
         />
         <ControlPanel
+          history={history}
           on={on}
-          onPowerClick={this.onPowerClick}
+          onPowerClick={() => this.onPowerClick(config)}
           onChatClick={this.onChatClick}
           onShareClick={this.onShareClick}
           onUsersClick={this.onUsersClick}
