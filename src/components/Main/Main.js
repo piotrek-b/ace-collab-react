@@ -7,6 +7,7 @@ import copy from 'copy-to-clipboard'
 import Editor from 'ace-collab/lib'
 import { Button, Icon, Popup } from 'semantic-ui-react'
 import { SemanticToastContainer, toast } from 'react-semantic-toasts'
+import { ErrorTypes } from 'ace-collab/consts'
 
 import { websocketConnect, websocketDisconnect } from 'services/api/actions'
 import ControlPanel from './components/ControlPanel'
@@ -116,11 +117,22 @@ class Main extends Component {
           description: 'Sesja Live Code uruchomiona.',
         })
       } catch (error) {
-        debugger
-        openModal(ModalTypes.ALERT_MODAL, {
-          title: 'Brak dostępu',
-          text: 'Nie udzielono dostępu do sesji Live Code.',
-        })
+        if (`${error}`.includes(ErrorTypes.ACCESS_DENIED)) {
+          openModal(ModalTypes.ALERT_MODAL, {
+            title: 'Brak dostępu',
+            text: 'Nie udzielono dostępu do sesji Live Code.',
+          })
+        } else if (`${error}`.includes(ErrorTypes.SESSION_NOT_AVAILABLE)) {
+          openModal(ModalTypes.ALERT_MODAL, {
+            title: 'Sesja niedostępna',
+            text: 'Żądana sesja jest niedostępna.',
+          })
+        } else if (`${error}`.includes(ErrorTypes.CONNECTION_ERROR)) {
+          openModal(ModalTypes.ALERT_MODAL, {
+            title: 'Problem z połączeniem',
+            text: 'Próba połączenia z serwerem zakończyła się niepowodzeniem.',
+          })
+        }
       }
     } else {
       disconnectWebsocket()
