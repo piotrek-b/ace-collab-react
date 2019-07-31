@@ -8,10 +8,10 @@ Make sure that you have installed:
 
 ### Installing
 
-1. Clone the repository
+1. Clone the repository and install dependencies
 
 ```
-git clone https://github.com/piotrek-b/ace-collab-react.git && cd ace-collab-react
+git clone https://github.com/piotrek-b/ace-collab-react.git && cd ace-collab-react && npm install
 ```
 
 2. Run following command
