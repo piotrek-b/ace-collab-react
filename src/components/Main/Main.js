@@ -97,7 +97,7 @@ class Main extends Component {
             description: 'Poczekaj, aż proces autoryzacji dobiegnie końca...',
           })
         }
-        const { doc, token, username } = await this.editor.init(server, this.onAskForAccess)
+        const { doc, token, username, readOnly } = await this.editor.init(server, this.onAskForAccess)
         const { docId, host, port, ssl } = server
 
         if (!docId) {
@@ -109,12 +109,17 @@ class Main extends Component {
         connectWebsocket(host, port, ssl, doc.id, username, token)
         setConfig({ ...config, docId: doc.id })
         closeModal()
+
+        const description = readOnly
+          ? 'Sesja Live Code uruchomiona (tylko do odczytu).'
+          : 'Sesja Live Code uruchomiona.'
+
         this.setState({ on: true })
         toast({
           type: 'success',
           icon: 'info',
           title: 'Sukces!',
-          description: 'Sesja Live Code uruchomiona.',
+          description,
         })
       } catch (error) {
         if (`${error}`.includes(ErrorTypes.ACCESS_DENIED)) {
