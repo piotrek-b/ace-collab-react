@@ -18,6 +18,7 @@ import { ModalTypes } from '../../consts'
 import { configSet } from '../../services/api/actions'
 
 import styledSemantic from '../../utils/styledSemantic'
+import getDocId from '../../getDocId'
 
 const FixedContainer = styled.div`
   position: fixed;
@@ -76,6 +77,14 @@ class Main extends Component {
     return resolved
   }
 
+  onAskForAccessOptions = async () => {
+    const { openModal } = this.props
+
+    const data = await openModal(ModalTypes.ACCESS_OPTIONS_MODAL)
+
+    return data[0]
+  }
+
   onPowerClick = async (config) => {
     const {
       connectWebsocket,
@@ -86,19 +95,33 @@ class Main extends Component {
     } = this.props
 
     const { server } = config
+    const docId = getDocId()
 
     if (!this.state.on) {
       try {
-        if (server.docId) {
+        let accessOptions = {}
+        if (docId) {
           toast({
             type: 'info',
             icon: 'info',
             title: 'Autoryzacja',
             description: 'Poczekaj, aż proces autoryzacji dobiegnie końca...',
           })
+        } else {
+          accessOptions = await this.onAskForAccessOptions()
         }
-        const { doc, token, username, readOnly } = await this.editor.init(server, this.onAskForAccess)
-        const { docId, host, port, ssl } = server
+
+        if (accessOptions.resolved === false) {
+          return
+        }
+
+        const {
+          doc,
+          token,
+          username,
+          readOnly,
+        } = await this.editor.init({ ...server, docId }, accessOptions, this.onAskForAccess)
+        const { host, port, ssl } = server
 
         if (!docId) {
           const newURL = (

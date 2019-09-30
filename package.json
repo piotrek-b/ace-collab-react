@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
-    "ace-collab": "^0.14.0",
+    "ace-collab": "^0.17.0",
     "add": "^2.0.6",
     "copy-to-clipboard": "^3.0.8",
     "core-js": "^3.1.3",
